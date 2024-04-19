@@ -1,0 +1,8 @@
+train: /content/nom-letters-detectection/images_and_labels/images/train
+val: /content/nom-letters-detectection/images_and_labels/images/val
+
+# Number of classes
+nc: 1
+
+# Class names
+names: ['nom-letter']
