@@ -58,7 +58,7 @@ else:
 
 # try to import OpenCV if the user didn't choose the option --no-animation
 show_animation = False
-if not args.no_animation:
+if not args.no_animation: 
     try:
         import cv2
         show_animation = True
