@@ -1,5 +1,5 @@
-train: /content/nom-letters-detectection/images_and_labels/images/train
-val: /content/nom-letters-detectection/images_and_labels/images/val
+train: /content/content/github/wb_localization_dataset/images/train # train images (relative to 'path') 70 img
+val: /content/content/github/wb_localization_dataset/images/val # val images (relative to 'path') 10 img
 
 # Number of classes
 nc: 1
