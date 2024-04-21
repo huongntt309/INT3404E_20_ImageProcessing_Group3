@@ -1,5 +1,5 @@
-train: /content/github/wb_localization_dataset/images/train # train images (relative to 'path') 70 img
-val: /content/github/wb_localization_dataset/images/val # val images (relative to 'path') 10 img
+train: /content/INT3404E_20_ImageProcessing_Group3/wb_localization_dataset/images/train # train images (relative to 'path') 70 img
+val: /content/INT3404E_20_ImageProcessing_Group3/wb_localization_dataset/images/val # val images (relative to 'path') 10 img
 
 # Number of classes
 nc: 1
