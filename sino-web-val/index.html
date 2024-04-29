@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sino-nom Object Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            background-image: url(./static/nlvnpf-0137-01-001.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1,
+        h2 {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+            color: #dc3545;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+        }
+
+        .half-container {
+            width: 45%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .half-container p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #uploadImageInput,
+        #uploadLabelInput {
+            margin-bottom: 10px;
+        }
+
+        #detectButton {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            align-self: flex-end;
+            /* Move the button to the right */
+        }
+
+        #detectButton:hover {
+            background-color: #0056b3;
+        }
+
+        #mAPContainer {
+            margin-top: 20px;
+        }
+
+        .highlight-code {
+            color: red;
+            font-family: monospace;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            font-weight: bold;
+        }
+
+        .result-value {
+            margin-left: 10px;
+            color: blue;
+            /* Example color */
+        }
+    </style>
+</head>
+
+<body>
+    <h2 style="text-align: center">Image Processing - Group 3 </h2>
+    <h1 style="text-align: center">Sino-nom Hand-writing Object Detection </h1>
+
+    <div class="container">
+        <div class="half-container" id="uploadContainer">
+            <h3>Upload your Sino-nom Hand-writing Images</h3>
+            <input id="uploadImageInput" type="file" multiple />
+
+            <h3>Upload the Label </h3>
+            <p>Format: <span class="highlight-code">label_id x_center y_center bbox_width bbox_height</span></p>
+            <input id="uploadLabelInput" type="file" multiple />
+            <br /><br />
+            <button id="detectButton">Detect Objects</button>
+        </div>
+
+        <div class="half-container" id="resultContainer">
+            <h3>The Result will show here</h3>
+            <div id="mAPContainer"></div>
+        </div>
+    </div>
+
+
+    <script>
+        const uploadImageInput = document.getElementById("uploadImageInput");
+        const uploadLabelInput = document.getElementById("uploadLabelInput");
+        const detectButton = document.getElementById("detectButton");
+        const uploadedCanvas = document.getElementById("uploadedCanvas");
+        const resultCanvas = document.getElementById("resultCanvas");
+
+        uploadImageInput.addEventListener("change", async (event) => {
+            const files = event.target.files;
+            for (const file of files) {
+                await displayImageOnCanvas(uploadedCanvas, file);
+            }
+        });
+
+        async function displayImageOnCanvas(canvas, file) {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+
+            // Load image asynchronously
+            await new Promise((resolve) => {
+                img.onload = () => resolve();
+            });
+
+            // Set canvas size to a fixed value
+            canvas.width = 400; // Set your desired width here
+            canvas.height = 300; // Set your desired height here
+
+            const ctx = canvas.getContext("2d");
+
+            // Clear canvas before drawing
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the image with fixed size
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+
+        detectButton.addEventListener("click", async () => {
+            const files_img = uploadImageInput.files;
+            const files_label = uploadLabelInput.files;
+
+            if (files_img.length === 0 || files_label.length === 0 || files_label.length != files_img.length) {
+                alert("Please upload both image and label files with the same length.");
+                return;
+            }
+
+            const formData = new FormData();
+
+            // Append image files
+            for (let i = 0; i < files_img.length; i++) {
+                formData.append("image_files", files_img[i]);
+            }
+
+            // Append label files
+            for (let i = 0; i < files_label.length; i++) {
+                formData.append("label_files", files_label[i]);
+            }
+
+            const response = await fetch("/detect", {
+                method: "post",
+                body: formData
+            });
+
+
+            const result = await response.json();
+
+            console.log("result front-end: ", result);
+            // Display validation results on the frontend
+            const resultContainer = document.getElementById("mAPContainer");
+            resultContainer.innerHTML = `
+                <div class="result-item">
+                    <p class="result-label">Box Map:</p>
+                    <p class="result-value">${result.box_map}</p>
+                </div>
+                <div class="result-item">
+                    <p class="result-label">Box Map 50:</p>
+                    <p class="result-value">${result.box_map50}</p>
+                </div>
+                <div class="result-item">
+                    <p class="result-label">Box Map 75:</p>
+                    <p class="result-value">${result.box_map75}</p>
+                </div>
+                <div class="result-item">
+                    <p class="result-label">Box Maps:</p>
+                    <p class="result-value">${result.box_maps}</p>
+                </div>
+            `;
+
+        });
+
+
+
+        function displayImageWithBoxes(canvas, file, result) {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                canvas.width = img.width;
+                canvas.height = img.height;
+                imageWidth = img.width;
+                imageHeight = img.height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                ctx.lineWidth = 2;
+                ctx.font = "18px serif";
+                labels = result.labels
+                labels.forEach(([label, x_cen, y_cen, w, h]) => {
+                    const x1 = (x_cen - w / 2) * imageWidth;
+                    const y1 = (y_cen - h / 2) * imageHeight;
+                    const x2 = (x_cen + w / 2) * imageWidth;
+                    const y2 = (y_cen + h / 2) * imageHeight;
+
+                    //  bounding box
+                    ctx.strokeRect(x1, y1, w * imageWidth, h * imageHeight);
+                    ctx.strokeStyle = "#00ff00";
+
+                });
+                predictions = result.predictions
+                // format x_center y_center
+                predictions.forEach(([x1, y1, x2, y2, label]) => {
+                    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                    ctx.strokeStyle = "#ff0000";
+
+                });
+
+            }
+        }
+
+    </script>
+</body>
+
+</html>

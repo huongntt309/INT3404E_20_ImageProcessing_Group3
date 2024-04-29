@@ -1,0 +1,8 @@
+path: E:/code_project/UET/flask/src/Sino-Web-Service
+train: images/train
+val: images/val
+# number of classes
+nc: 1
+
+# class names
+names: ['']
