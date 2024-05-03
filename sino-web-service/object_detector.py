@@ -15,7 +15,7 @@ def set_up():
   model_path = os.path.join(file_dir, "best.pt")
   model = YOLO(model_path)
   
-  print("Running at: http://localhost:8080")
+  print("Running at: http://localhost:8080/validate")
 
 
 def save_img_label(image_files, label_files):
@@ -62,24 +62,30 @@ def remove_img_label():
 
     print("Image and label files removed successfully.")
 
-@app.route("/")
+@app.route("/validate")
 def root():
     """
     Site main page handler function.
     :return: Content of index.html file
     """
     file_dir = os.path.dirname(os.path.realpath(__file__))
-    html_path = os.path.join(file_dir, "index.html")
+    html_path = os.path.join(file_dir, "index_val.html")
     with open(html_path) as file:
         return file.read()
 
-# TODO: calculate mAP for this list 
-          # boxes have predictions    x_center, y_center, w, h, class, confidence score
-          # label_file have ground truth  class, x_center, y_center, w, h
-          # and just have 1 class is 0, how can i calculate mAP
-
-@app.route("/detect", methods=["POST"])
-def detect():
+@app.route("/predict")
+def predict_page():
+    """
+    Site main page handler function.
+    :return: Content of index.html file
+    """
+    file_dir = os.path.dirname(os.path.realpath(__file__))
+    html_path = os.path.join(file_dir, "index_predict.html")
+    with open(html_path) as file:
+        return file.read()
+    
+@app.route("/validate_api", methods=["POST"])
+def validate_api():
     """
     Handler of /detect POST endpoint
     Receives uploaded files with names "image_files" and "label_files", 
@@ -92,6 +98,12 @@ def detect():
     # Get uploaded files
     image_files = request.files.getlist("image_files")
     label_files = request.files.getlist("label_files")
+    # Get configuration
+    imageSize = int(request.form['imageSize'])
+    iou = float(request.form['iou'])  # Assuming IOU is a floating-point number
+    confidence = float(request.form['confidence'])  # Assuming confidence is a floating-point number
+
+    
     
     save_img_label(image_files, label_files)
     
@@ -101,10 +113,10 @@ def detect():
     
     global model
     validation_results = model.val(data = yaml_path,
-                                        imgsz=896,
+                                        imgsz=imageSize,
                                         batch=16,
-                                        conf=0.25,
-                                        iou=0.6)
+                                        conf=confidence,
+                                        iou=iou)
     
     remove_img_label()
     # Export results to frontend
@@ -119,6 +131,50 @@ def detect():
     }
     print("result BE:", result)
     return jsonify(result)
+
+@app.route("/predict_api", methods=["POST"])
+def predict_api():
+    """
+        Handler of /predict POST endpoint
+        Receives uploaded file with a name "image_file", 
+        passes it through YOLOv8 object detection 
+        network and returns an array of bounding boxes.
+        :return: a JSON array of objects bounding 
+        boxes in format 
+        [[x1,y1,x2,y2,object_type,probability],..]
+    """
+    def detect_objects_on_image(buf):
+        """
+        Function receives an image,
+        passes it through YOLOv8 neural network
+        and returns an array of detected objects
+        and their bounding boxes
+        :param buf: Input image file stream
+        :return: Array of bounding boxes in format 
+        [[x1,y1,x2,y2,object_type,probability],..]
+        """
+        global model
+        
+        results = model.predict(buf)
+        result = results[0]
+        output = []
+        for box in result.boxes:
+            x1, y1, x2, y2 = [
+            round(x) for x in box.xyxy[0].tolist()
+            ]
+            class_id = box.cls[0].item()
+            prob = round(box.conf[0].item(), 2)
+            output.append([
+            x1, y1, x2, y2, result.names[class_id], prob
+            ])
+        return output
+    
+    buf = request.files["image_file"]
+    boxes = detect_objects_on_image(Image.open(buf.stream))
+    return Response(
+      json.dumps(boxes),  
+      mimetype='application/json'
+    )
 
 
 set_up()

@@ -1,0 +1,109 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    background-image: url(./static/nlvnpf-0174-03-014.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+h1,
+h2 {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    text-align: center;
+    color: #dc3545;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+}
+
+.half-container {
+    width: 45%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.half-container p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#uploadImageInput,
+#uploadLabelInput {
+    margin-bottom: 10px;
+}
+
+#detectButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    align-self: flex-end;
+    /* Move the button to the right */
+}
+
+#detectButton:hover {
+    opacity: 0.5;
+}
+
+#mAPContainer {
+    margin-top: 20px;
+}
+
+.highlight-code {
+    color: red;
+    font-family: monospace;
+}
+
+.result-item {
+    margin-bottom: 10px;
+}
+
+.result-label {
+    font-weight: bold;
+}
+
+.result-value {
+    margin-left: 10px;
+    color: #dc3545;
+    /* Example color */
+}
+
+/* Style the navigation bar */
+.navbar {
+    overflow: hidden;
+    background-color: #dc3545;
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}

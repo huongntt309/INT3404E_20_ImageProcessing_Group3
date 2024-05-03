@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #f8f9fa;
-            background-image: url(./static/nlvnpf-0137-01-001.jpg);
+            background-image: url(./static/nlvnpf-0174-03-014.jpg);
             background-size: cover;
             background-position: center;
         }
@@ -52,17 +52,21 @@
         }
 
         #detectButton {
-            background-color: #007bff;
-            color: #fff;
+            margin-top: 10px;
             padding: 10px 20px;
-            border: none;
+            font-size: 16px;
             cursor: pointer;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+
             align-self: flex-end;
             /* Move the button to the right */
         }
 
         #detectButton:hover {
-            background-color: #0056b3;
+            opacity: 0.5;
         }
 
         #mAPContainer {
@@ -84,26 +88,66 @@
 
         .result-value {
             margin-left: 10px;
-            color: blue;
+            color: #dc3545;
             /* Example color */
+        }
+
+        /* Style the navigation bar */
+        .navbar {
+            overflow: hidden;
+            background-color: #dc3545;
+        }
+
+        /* Style the links inside the navigation bar */
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        /* Change the color of links on hover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
         }
     </style>
 </head>
 
 <body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="/predict">Predict</a>
+        <a href="/validate">Validate</a>
+        <!-- Add more links as needed -->
+    </div>
     <h2 style="text-align: center">Image Processing - Group 3 </h2>
-    <h1 style="text-align: center">Sino-nom Hand-writing Object Detection </h1>
+    <h1 style="text-align: center">Sino-nom Handwritten Validation</h1>
 
     <div class="container">
         <div class="half-container" id="uploadContainer">
-            <h3>Upload your Sino-nom Hand-writing Images</h3>
+            <h3>Upload your Sino-nom Handwritten Images</h3>
             <input id="uploadImageInput" type="file" multiple />
 
-            <h3>Upload the Label </h3>
+            <h3>Upload the Label</h3>
             <p>Format: <span class="highlight-code">label_id x_center y_center bbox_width bbox_height</span></p>
             <input id="uploadLabelInput" type="file" multiple />
             <br /><br />
-            <button id="detectButton">Detect Objects</button>
+            <h3>Set the configuration</h3>
+            <label for="imageSize">Image Size:</label>
+            <input id="imageSize" type="text" placeholder="e.g., 416" />
+            <br /><br />
+            <label for="iou">IOU Threshold:</label>
+            <input id="iou" type="text" placeholder="e.g., 0.5" />
+            <br /><br />
+            <label for="confidence">Confidence Score:</label>
+            <input id="confidence" type="text" placeholder="e.g., 0.7" />
+            <br /><br />
+
+            <button id="detectButton">Validate</button>
         </div>
 
         <div class="half-container" id="resultContainer">
@@ -116,6 +160,11 @@
     <script>
         const uploadImageInput = document.getElementById("uploadImageInput");
         const uploadLabelInput = document.getElementById("uploadLabelInput");
+
+        const imageSizeInput = document.getElementById("imageSize");
+        const iouInput = document.getElementById("iou");
+        const confidenceInput = document.getElementById("confidence");
+
         const detectButton = document.getElementById("detectButton");
         const uploadedCanvas = document.getElementById("uploadedCanvas");
         const resultCanvas = document.getElementById("resultCanvas");
@@ -148,10 +197,18 @@
             // Draw the image with fixed size
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
-
+        function clearOutput() {
+            const resultContainer = document.getElementById("mAPContainer");
+            resultContainer.innerHTML = ""
+        }
         detectButton.addEventListener("click", async () => {
+            clearOutput();
             const files_img = uploadImageInput.files;
             const files_label = uploadLabelInput.files;
+
+            const imageSize = imageSizeInput.value;
+            const iou = iouInput.value;
+            const confidence = confidenceInput.value;
 
             if (files_img.length === 0 || files_label.length === 0 || files_label.length != files_img.length) {
                 alert("Please upload both image and label files with the same length.");
@@ -170,7 +227,12 @@
                 formData.append("label_files", files_label[i]);
             }
 
-            const response = await fetch("/detect", {
+            // Append configuration parameters
+            formData.append("imageSize", imageSize);
+            formData.append("iou", iou);
+            formData.append("confidence", confidence);
+
+            const response = await fetch("/validate_api", {
                 method: "post",
                 body: formData
             });
@@ -184,19 +246,19 @@
             resultContainer.innerHTML = `
                 <div class="result-item">
                     <p class="result-label">Box Map:</p>
-                    <p class="result-value">${result.box_map}</p>
+                    <p class="result-value" style = "color: #dc3545;" >${result.box_map}</p>
                 </div>
                 <div class="result-item">
                     <p class="result-label">Box Map 50:</p>
-                    <p class="result-value">${result.box_map50}</p>
+                    <p class="result-value" style = "color: #dc3545;" >${result.box_map50}</p>
                 </div>
                 <div class="result-item">
                     <p class="result-label">Box Map 75:</p>
-                    <p class="result-value">${result.box_map75}</p>
+                    <p class="result-value" style = "color: #dc3545;" >${result.box_map75}</p>
                 </div>
                 <div class="result-item">
                     <p class="result-label">Box Maps:</p>
-                    <p class="result-value">${result.box_maps}</p>
+                    <p class="result-value" style = "color: #dc3545;" >${result.box_maps}</p>
                 </div>
             `;
 

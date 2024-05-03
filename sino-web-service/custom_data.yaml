@@ -1,4 +1,4 @@
-path: E:/code_project/UET/flask/src/Sino-Web-Service
+path: E:/code_project/UET/flask/Sino-Web-Service
 train: images/train
 val: images/val
 # number of classes

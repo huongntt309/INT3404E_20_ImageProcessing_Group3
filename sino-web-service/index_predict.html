@@ -5,10 +5,29 @@
     <meta charset="UTF-8">
     <title>Sino-nom Object Detection</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            background-image: url(./static/nlvnpf-0137-01-050.jpg);
+            background-size: cover;
+            background-position: center;
+        }
+
+        h1,
+        h2 {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+            color: #dc3545;
+        }
+
         .container {
             display: flex;
             justify-content: space-between;
             align-items: stretch;
+            background-color: rgba(255, 255, 255, 0.8);
             margin-top: 20px;
         }
 
@@ -29,36 +48,65 @@
             max-width: 100%;
         }
 
-        button {
+        #detectButton {
             margin-top: 10px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background-color: #007bff;
+            background-color: #dc3545;
             color: white;
             border: none;
             border-radius: 5px;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        #detectButton:hover {
+            opacity: 0.5;
+        }
+
+        /* Style the navigation bar */
+        .navbar {
+            overflow: hidden;
+            background-color: #dc3545;
+        }
+
+        /* Style the links inside the navigation bar */
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        /* Change the color of links on hover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
         }
     </style>
 </head>
 
 <body>
+    <!-- Navigation bar -->
+    <div class="navbar">
+        <a href="/predict">Predict</a>
+        <a href="/validate">Validate</a>
+        <!-- Add more links as needed -->
+    </div>
     <h2 style="text-align: center">Image Processing - Group 3 </h2>
-    <h1 style="text-align: center">Sino-nom Hand-writing Object Detection </h1>
+    <h1 style="text-align: center">Sino-nom Handwritten Prediction</h1>
 
     <div class="container">
         <div class="half-container" id="uploadContainer">
-            <p>Upload your Sino-nom Hand-writing Image</p>
+            <h3>Upload your Sino-nom Handwritten Images</h3>
             <input id="uploadInput" type="file" />
             <canvas id="uploadedCanvas"></canvas>
-            <button id="detectButton">Detect Objects</button>
+            <button id="detectButton">Predict Objects</button>
         </div>
         <div class="half-container" id="resultContainer">
-            <p>The Result will show here</p>
+            <h3>The Result will show here</h3>
             <!-- <p>This Hand-writing Character Detection task use YOLOv8 </p> -->
             <canvas id="resultCanvas"></canvas>
         </div>
@@ -83,7 +131,7 @@
             }
             const data = new FormData();
             data.append("image_file", file, "image_file");
-            const response = await fetch("/detect", {
+            const response = await fetch("/predict_api", {
                 method: "post",
                 body: data
             });
