@@ -34,15 +34,15 @@ cd INT3404E_20_ImageProcessing_Group3
 Usage
 Run the web applications:
 
-Sino-gradio:
+Sino-gradio: an Sinonom object detection run in Gradio.io
 ```
-cd sino-gradio
+cd application/sino-gradio
 bash create_env.sh
 bash run.sh
 ```
-Sino-web-detector and Sino-web-val:
+Sino-web-detector and Sino-web-val: an Sinonom object detection website run in Flask Python 
 ```
-cd sino-web-service
+cd application/sino-web-service
 bash create_env.sh
 bash run.sh
 ```
