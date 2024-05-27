@@ -37,14 +37,14 @@ Run the web applications:
 Sino-gradio:
 ```
 cd sino-gradio
-pip install -r requirements.txt
-python app.py
+bash create_env.sh
+bash run.sh
 ```
 Sino-web-detector and Sino-web-val:
 ```
-cd sino_web_service
-pip install requirements_sinoweb.txt
-python object_detector.py
+cd sino-web-service
+bash create_env.sh
+bash run.sh
 ```
 Sino-model:
 
