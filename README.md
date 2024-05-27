@@ -16,32 +16,6 @@ Results: Using the Average Precision (AP) metric, we found that YOLOv8 outperfor
 ### Data Augmentation
 To enhance model performance, we applied various data augmentation techniques to address issues like small character size, white characters on a black background, and stained images. We utilized the Albumentations library, which offers a range of pre-defined and customizable transformations.
 
-## Task Descriptions
-1. Nguyen Thi Thuy Huong
-  - Implementing a pipeline in Detectron2
-  - Conducting error analysis
-  - Data augmentation
-  - Reviewing and refining documentation
-2. Hoang Duc Anh
-
-  - Implementing a pipeline in YOLOv9
-  - Implementing and tuning YOLOv8 (V8L, V8M)
-  - Training with augmented data
-  - Evaluating and selecting data for augmentation
-3. Tran Thi Van Anh
-
-  - Implementing a pipeline in DETR
-  - Sino-nom data analysis
-  - Documenting project workflow and methodologies
-  - Evaluating and selecting data for augmentation
-4. Tran Hanh Uyen
-
-  - Implementing a pipeline in YOLOv5
-  - Gathering and curating datasets
-  - Filtering augmented data for training
-  - Self-Evaluation of Contributions
-Each team member's contributions were essential in achieving our project's goals. The detailed tasks undertaken by each member ensured a thorough and collaborative approach to model development, data augmentation, and system implementation.
-
 ## Applications
 ### Sino-gradio
 A Gradio interface for visualizing predictions from the fine-tuned YOLOv8 model.
@@ -50,11 +24,7 @@ A Gradio interface for visualizing predictions from the fine-tuned YOLOv8 model.
 A web application for detecting Sino-nom characters in images, validating the val/test dataset through a user interface.
 
 ## Getting Started
-Prerequisites
-1. Python 3.10 +
-2. PyTorch
-3. YOLOv8
-   
+ 
 Installation
 Clone the repository:
 ```
@@ -62,23 +32,23 @@ git clone https://github.com/huongntt309/INT3404E_20_ImageProcessing_Group3.git
 cd INT3404E_20_ImageProcessing_Group3
 ```
 Usage
-Train the model:
-
-```
-python train.py --config configs/yolov8_config.yaml
-```
-
 Run the web applications:
 
 Sino-gradio:
 ```
-python sino-gradio/app.py
+cd sino-gradio
+pip install -r requirements.txt
+python app.py
 ```
 Sino-web-detector and Sino-web-val:
 ```
-python sino_web_service/object_detector.py
+cd sino_web_service
+pip install requirements_sinoweb.txt
+python object_detector.py
 ```
+Sino-model:
 
+You can download notebook file at INT3404E_20_ImageProcessing_Group3/yolov8/YOLOv8.ipynb and upload them to Google Colab for usage.
 
 ## Contributors
 1. Nguyen Thi Thuy Huong
