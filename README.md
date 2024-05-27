@@ -1,6 +1,9 @@
 # Sino-nom Character Localization Project
 This project aims to develop and implement a system for detecting and localizing Sino-nom characters in images using various state-of-the-art object detection models. Our final solution leverages the YOLOv8 model, given its superior performance on our dataset.
-    add an image to readme github
+
+
+<img src="sino-web-service/web_visualization.png" alt="Sino-web-detector application" style="display: block; margin: 0 auto;" width="70%" height="auto">
+
 ## Approaches
 ### Model Selection
 We explored several object detection models for the Sino-nom Character Localization dataset:
