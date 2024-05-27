@@ -5,10 +5,11 @@ This project aims to develop and implement a system for detecting and localizing
 ### Model Selection
 We explored several object detection models for the Sino-nom Character Localization dataset:
 
-1. Detectron2: A highly modular and flexible library for state-of-the-art object detection tasks.
-2. DETR: An end-to-end object detection model combining Transformer architecture with a CNN backbone.
-3. YOLOv5: A real-time object detection system known for its speed and accuracy.
-4. YOLOv8: The latest in the YOLO series, providing significant improvements in detection accuracy.
+1. Detectron2: A modular library for advanced object detection tasks.
+2. DETR: End-to-end object detection using Transformers and CNNs.
+3. YOLOv5: Fast and accurate real-time object detection system.
+4. YOLOv8: Enhanced YOLO series model with improved detection accuracy.
+5. YOLOv9: The latest YOLO model offering significant detection accuracy improvements.
 
 Results: Using the Average Precision (AP) metric, we found that YOLOv8 outperformed other models with an mAP of approximately 0.8. Therefore, we chose YOLOv8 as our primary model.
 
@@ -57,14 +58,9 @@ Prerequisites
 Installation
 Clone the repository:
 ```
-git clone https://github.com/yourusername/sino-nom-localization.git
-cd sino-nom-localization
+git clone https://github.com/huongntt309/INT3404E_20_ImageProcessing_Group3.git
+cd INT3404E_20_ImageProcessing_Group3
 ```
-Install the required dependencies:
-```
-pip install -r requirements.txt
-```
-
 Usage
 Train the model:
 
@@ -76,16 +72,13 @@ Run the web applications:
 
 Sino-gradio:
 ```
-python sino_gradio.py
+python sino-gradio/app.py
 ```
-Sino-web-detector:
+Sino-web-detector and Sino-web-val:
 ```
-python sino_web_detector.py
+python sino_web_service/object_detector.py
 ```
-Sino-web-val:
-```
-python sino_web_val.py
-```
+
 
 ## Contributors
 1. Nguyen Thi Thuy Huong
